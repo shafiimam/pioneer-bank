@@ -34,7 +34,7 @@
             <div class="col-md-4">
                 <div class="withdraw status">
                     <h5>Withdraw</h5>
-                    <h2>$ <span id="withdrawAmount"></span> </h2>
+                    <h2>$ <span id="currentWithdraw">00</span> </h2>
                 </div>
             </div>
             <div class="col-md-4">
@@ -55,7 +55,7 @@
                 <div class="col-md-6">
                     <div class="submit-area">
                         <h4>Withdraw</h4>
-                        <input type="text" class="form-control" placeholder="$ ammount you want to withdraw">
+                        <input id="withdrawAmount" type="text" class="form-control" placeholder="$ ammount you want to withdraw">
                         <br>
                         <button id="addWitdraw" class="btn btn-success">Withdraw</button>
                     </div>
@@ -75,26 +75,39 @@
         // deposit button event handler
         const depositBtn = document.getElementById("addDeposit");
         depositBtn.addEventListener("click", function() {
-                const deposit_Amount = document.getElementById("depositAmount").value;
+            const deposit_Amount = document.getElementById("depositAmount").value;
 
-                if (deposit_Amount != "") {
-                    const depositNumber = getInputNumber("depositAmount");
-                    updateSpanText("currentDeposit", depositNumber);
-                    updateSpanText("currentBalance", depositNumber);
+            if (deposit_Amount != "") {
+                const depositNumber = getInputNumber("depositAmount");
+                updateSpanText("currentDeposit", depositNumber);
+                updateSpanText("currentBalance", depositNumber);
+                document.getElementById("depositAmount").value = "";
+                alert("Deposit success!");
+            } else {
+                alert('enter valid value');
+            }
 
-                    document.getElementById("depositAmount").value = "";
-                } else {
-                    alert('enter valid value');
-                }
+        })
 
-            })
-            // withdraw button event handler
+        // withdraw button event handler
         const withdrawBtn = document.getElementById("addWitdraw");
+        const balance = parseFloat(document.getElementById("currentBalance").innerText);
+        const withdraw_Amount = document.getElementById("withdrawAmount").value;
         withdrawBtn.addEventListener("click", function() {
             const withdrawNumber = getInputNumber("withdrawAmount");
 
+            if (withdrawNumber < balance || withdraw_Amount != "") {
+                updateSpanText("currentWithdraw", withdrawNumber);
+                updateSpanText("currentBalance", -1 * withdrawNumber);
+                document.getElementById("withdrawAmount").value = "";
+                alert("withdraw success!");
+            } else {
+                alert("withdraw amount cannot be bigger than balance or empty");
+            }
+
         });
 
+        // function to get the input number
         function getInputNumber(id) {
             const amount = document.getElementById(id).value;
             const amountNumber = parseFloat(amount);
